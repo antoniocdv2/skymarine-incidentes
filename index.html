@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Treinamento Malu | Incidentes da Cadeia Logística</title>
+  <style>
+    :root{
+      --navy:#061526;
+      --navy2:#081d33;
+      --blue:#0b6fff;
+      --cyan:#00d4ff;
+      --teal:#12d6a4;
+      --green:#74f7c4;
+      --amber:#ffcc66;
+      --red:#ff5b73;
+      --white:#f6fbff;
+      --muted:#9bb3c7;
+      --card:rgba(255,255,255,.085);
+      --card2:rgba(255,255,255,.13);
+      --line:rgba(255,255,255,.16);
+      --shadow:0 25px 70px rgba(0,0,0,.35);
+      --radius:28px;
+      --radius2:18px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--white);
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 15% 8%, rgba(0,212,255,.24), transparent 35%),
+        radial-gradient(circle at 82% 12%, rgba(18,214,164,.16), transparent 34%),
+        radial-gradient(circle at 50% 90%, rgba(11,111,255,.2), transparent 42%),
+        linear-gradient(135deg, #04101e 0%, #071a2f 52%, #04101e 100%);
+      overflow-x:hidden;
+      min-height:100vh;
+    }
+
+    body:before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:-3;
+      opacity:.34;
+      background-image:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+      background-size:54px 54px;
+      mask-image:radial-gradient(circle at 50% 30%, black, transparent 80%);
+    }
+
+    body:after{
+      content:"";
+      position:fixed;
+      inset:-20%;
+      pointer-events:none;
+      z-index:-2;
+      opacity:.12;
+      background:conic-gradient(from 180deg, transparent, var(--cyan), transparent, var(--teal), transparent);
+      animation:spin 34s linear infinite;
+      filter:blur(12px);
+    }
+
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes pulse{50%{opacity:.45;transform:scale(1.06)}}
+    @keyframes float{50%{transform:translateY(-10px)}}
+    @keyframes scan{0%{transform:translateX(-120%)} 100%{transform:translateX(120%)}}
+    @keyframes glow{50%{box-shadow:0 0 44px rgba(0,212,255,.35)}}
+
+    button, input, select, textarea{font:inherit}
+    button{
+      border:0;
+      color:var(--white);
+      background:linear-gradient(135deg, rgba(11,111,255,.92), rgba(0,212,255,.8));
+      padding:13px 18px;
+      border-radius:999px;
+      font-weight:800;
+      cursor:pointer;
+      box-shadow:0 14px 36px rgba(11,111,255,.2);
+      transition:.25s ease;
+      position:relative;
+      overflow:hidden;
+    }
+    button:hover{transform:translateY(-2px);box-shadow:0 18px 46px rgba(0,212,255,.25)}
+    button:disabled{opacity:.38;cursor:not-allowed;transform:none;filter:grayscale(.7)}
+    button.secondary{background:rgba(255,255,255,.10);border:1px solid var(--line);box-shadow:none}
+    button.warning{background:linear-gradient(135deg, #ff8a3d, #ffcc66); color:#122033}
+    button.success{background:linear-gradient(135deg, #16c784, #74f7c4); color:#062019}
+    button.danger{background:linear-gradient(135deg, #ff4b6e, #ff8aa0)}
+    button.small{padding:9px 13px;font-size:.86rem}
+
+    .app{min-height:100vh}
+    .hide{display:none!important}
+    .screen{
+      min-height:100vh;
+      padding:28px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .glass{
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(24px);
+    }
+
+    .login-card{
+      width:min(1180px,100%);
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      overflow:hidden;
+    }
+
+    .hero{
+      position:relative;
+      min-height:710px;
+      padding:54px;
+      background:
+        linear-gradient(135deg, rgba(0,212,255,.08), rgba(18,214,164,.06)),
+        radial-gradient(circle at 30% 20%, rgba(0,212,255,.28), transparent 35%);
+    }
+
+    .brandline{display:flex;align-items:center;gap:14px;margin-bottom:34px}
+    .logo{
+      width:62px;height:62px;border-radius:18px;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg, #0b6fff, #00d4ff 62%, #12d6a4);
+      box-shadow:0 20px 50px rgba(0,212,255,.25);
+      position:relative;
+    }
+    .logo:before{
+      content:"";
+      width:35px;height:24px;
+      border:3px solid #fff;
+      border-left-width:7px;
+      border-radius:6px;
+      transform:skew(-12deg);
+      opacity:.95;
+    }
+    .brand-title{font-weight:950;letter-spacing:.16em;font-size:1.02rem}
+    .brand-sub{font-size:.82rem;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+
+    h1{
+      font-size:clamp(2.6rem,5vw,5.8rem);
+      line-height:.92;
+      letter-spacing:-.08em;
+      margin:0 0 20px;
+    }
+    .gradient-text{
+      background:linear-gradient(135deg, #fff, #9feeff 42%, #74f7c4);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .lead{font-size:1.24rem;line-height:1.55;color:#cce5f5;max-width:780px;margin:0 0 30px}
+    .chips{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0}
+    .chip{
+      padding:10px 13px;border-radius:999px;border:1px solid var(--line);
+      background:rgba(255,255,255,.08);color:#dff7ff;font-weight:750;font-size:.9rem
+    }
+
+    .orbital{
+      position:absolute;
+      right:38px;
+      bottom:46px;
+      width:330px;height:330px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.13);
+      opacity:.96;
+      animation:float 7s ease-in-out infinite;
+    }
+    .orbital:before,.orbital:after{
+      content:"";position:absolute;border-radius:50%;inset:24px;
+      border:1px dashed rgba(0,212,255,.34);
+    }
+    .orbital:after{inset:80px;border-style:solid;border-color:rgba(18,214,164,.24)}
+    .ship{
+      position:absolute;left:50%;top:50%;width:172px;height:92px;
+      transform:translate(-50%,-50%);
+      border-radius:18px;
+      background:linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.05));
+      border:1px solid var(--line);
+      box-shadow:inset 0 0 30px rgba(0,212,255,.12), 0 25px 60px rgba(0,0,0,.25);
+    }
+    .ship:before{content:"";position:absolute;left:18px;right:18px;top:24px;height:12px;border-radius:30px;background:rgba(0,212,255,.55);box-shadow:0 27px 0 rgba(18,214,164,.4)}
+    .ship:after{content:"";position:absolute;left:22px;right:22px;bottom:12px;height:10px;border-radius:30px;border-bottom:4px solid rgba(255,255,255,.35)}
+    .dot{
+      position:absolute;width:14px;height:14px;border-radius:50%;background:var(--cyan);box-shadow:0 0 28px var(--cyan);
+      animation:pulse 3s ease-in-out infinite;
+    }
+    .d1{left:12%;top:22%}.d2{right:18%;top:32%;animation-delay:.7s}.d3{left:32%;bottom:12%;animation-delay:1.4s}
+
+    .login-panel{padding:44px;display:flex;flex-direction:column;justify-content:center}
+    .panel-title{font-size:1.65rem;letter-spacing:-.04em;margin:0 0 8px}
+    .panel-help{color:var(--muted);line-height:1.5;margin:0 0 26px}
+    label{display:block;color:#cfefff;font-weight:800;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;margin:18px 0 8px}
+    input, select, textarea{
+      width:100%;
+      color:var(--white);
+      border:1px solid rgba(255,255,255,.15);
+      background:rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:14px 14px;
+      outline:0;
+      transition:.2s ease;
+    }
+    input:focus, select:focus, textarea:focus{border-color:rgba(0,212,255,.8);box-shadow:0 0 0 4px rgba(0,212,255,.12)}
+    textarea{min-height:110px;resize:vertical}
+    .tiny{font-size:.8rem;color:var(--muted);line-height:1.45}
+    .notice{
+      border:1px solid rgba(255,204,102,.35);
+      background:rgba(255,204,102,.10);
+      border-radius:18px;
+      padding:14px;
+      color:#ffe8b0;
+      margin:20px 0;
+      line-height:1.45;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:310px 1fr;
+      min-height:100vh;
+    }
+    .sidebar{
+      position:sticky;top:0;height:100vh;
+      padding:22px;
+      border-right:1px solid var(--line);
+      background:rgba(3,13,25,.68);
+      backdrop-filter:blur(24px);
+      overflow:auto;
+    }
+    .side-logo{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+    .side-logo .logo{width:46px;height:46px;border-radius:14px}
+    .side-logo .logo:before{width:26px;height:17px;border-width:2px;border-left-width:5px}
+    .userbox{
+      padding:16px;border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.07);
+      margin-bottom:18px;
+    }
+    .userbox strong{display:block;font-size:1rem}
+    .userbox span{font-size:.84rem;color:var(--muted)}
+    .progress-shell{height:12px;border-radius:999px;background:rgba(255,255,255,.09);overflow:hidden;margin:12px 0}
+    .progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--teal));border-radius:999px;transition:.45s ease}
+    .navlist{display:grid;gap:8px;margin:22px 0}
+    .navitem{
+      display:flex;align-items:center;gap:11px;
+      width:100%;text-align:left;
+      padding:12px 12px;border-radius:16px;
+      color:#d9f5ff;background:rgba(255,255,255,.05);
+      border:1px solid transparent;
+      cursor:pointer;transition:.2s ease;
+      font-weight:760;
+    }
+    .navitem:hover,.navitem.active{background:rgba(0,212,255,.11);border-color:rgba(0,212,255,.28);transform:translateX(4px)}
+    .navitem.done .num{background:linear-gradient(135deg,var(--teal),var(--green));color:#031810}
+    .num{
+      min-width:30px;height:30px;border-radius:10px;background:rgba(255,255,255,.13);
+      display:grid;place-items:center;font-size:.82rem;font-weight:950
+    }
+
+    main{padding:26px 30px 46px;min-width:0}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:16px 18px;margin-bottom:24px;border:1px solid var(--line);
+      border-radius:24px;background:rgba(255,255,255,.07);backdrop-filter:blur(18px);
+      position:sticky;top:16px;z-index:10;
+    }
+    .topbar h2{margin:0;font-size:1.05rem;letter-spacing:-.02em}
+    .status-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;padding:9px 11px;border-radius:999px;
+      background:rgba(255,255,255,.08);border:1px solid var(--line);font-size:.82rem;font-weight:850;color:#dff7ff
+    }
+    .pulse-dot{width:9px;height:9px;border-radius:50%;background:var(--teal);box-shadow:0 0 18px var(--teal)}
+    .stage{
+      border:1px solid var(--line);
+      border-radius:32px;
+      min-height:calc(100vh - 150px);
+      background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.045));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .stage:before{
+      content:"";
+      position:absolute;inset:0 0 auto 0;height:2px;
+      background:linear-gradient(90deg,transparent,var(--cyan),var(--teal),transparent);
+      animation:scan 6s linear infinite;
+    }
+
+    .page{display:none;padding:34px}
+    .page.active{display:block}
+    .page-head{
+      display:flex;justify-content:space-between;gap:22px;align-items:flex-start;margin-bottom:26px;
+    }
+    .kicker{
+      display:inline-flex;gap:8px;align-items:center;
+      color:var(--green);font-weight:950;letter-spacing:.16em;text-transform:uppercase;font-size:.77rem;
+      margin-bottom:12px;
+    }
+    .page h3{
+      font-size:clamp(2rem,4vw,4rem);
+      line-height:.96;letter-spacing:-.06em;margin:0 0 14px
+    }
+    .page p{color:#cae3f5;line-height:1.65;font-size:1.05rem}
+    .page .intro{max-width:900px;font-size:1.18rem;color:#dff5ff}
+    .tag{
+      border:1px solid var(--line);background:rgba(255,255,255,.08);border-radius:999px;padding:10px 12px;
+      color:#dff7ff;font-size:.82rem;font-weight:850;white-space:nowrap;
+    }
+    .grid{display:grid;gap:18px}
+    .grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid.cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .card{
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.055));
+      padding:22px;
+      position:relative;
+      overflow:hidden;
+    }
+    .card:hover{border-color:rgba(0,212,255,.35)}
+    .card h4{margin:0 0 10px;font-size:1.22rem;letter-spacing:-.02em}
+    .card p,.card li{color:#cce5f5;line-height:1.55}
+    .icon{
+      width:48px;height:48px;border-radius:16px;display:grid;place-items:center;
+      background:rgba(0,212,255,.12);border:1px solid rgba(0,212,255,.25);
+      margin-bottom:16px;font-size:1.4rem;
+    }
+    .big-number{font-size:4rem;font-weight:950;letter-spacing:-.08em;color:rgba(255,255,255,.18);position:absolute;right:20px;top:5px}
+    .callout{
+      border:1px solid rgba(0,212,255,.30);
+      background:linear-gradient(135deg, rgba(0,212,255,.12), rgba(18,214,164,.08));
+      border-radius:24px;padding:22px;margin:22px 0;
+    }
+    .callout strong{color:#fff}
+    .danger-callout{border-color:rgba(255,91,115,.35);background:rgba(255,91,115,.10)}
+    .amber-callout{border-color:rgba(255,204,102,.35);background:rgba(255,204,102,.10)}
+
+    .mission-map{
+      display:grid;grid-template-columns:repeat(8,minmax(170px,1fr));gap:12px;overflow:auto;padding-bottom:10px
+    }
+    .module-tile{
+      min-height:170px;
+      border:1px solid var(--line);border-radius:22px;padding:16px;
+      background:rgba(255,255,255,.075);cursor:pointer;transition:.2s ease;
+      position:relative;overflow:hidden;
+    }
+    .module-tile:hover{transform:translateY(-5px);border-color:rgba(0,212,255,.35)}
+    .module-tile.done{background:linear-gradient(180deg, rgba(18,214,164,.16), rgba(255,255,255,.06))}
+    .module-tile .module-no{font-weight:950;color:var(--green);letter-spacing:.1em;font-size:.78rem}
+    .module-tile h4{font-size:1.05rem;margin:12px 0;line-height:1.1}
+    .module-tile p{font-size:.86rem;margin:0;color:var(--muted)}
+    .module-tile:after{
+      content:"";position:absolute;width:90px;height:90px;border-radius:50%;
+      right:-35px;bottom:-35px;background:rgba(0,212,255,.08)
+    }
+
+    .scenario{
+      border:1px solid rgba(0,212,255,.24);
+      border-radius:26px;
+      padding:24px;
+      background:
+        linear-gradient(135deg, rgba(0,212,255,.10), rgba(255,255,255,.04)),
+        radial-gradient(circle at 90% 10%, rgba(18,214,164,.18), transparent 34%);
+      margin:22px 0;
+    }
+    .scenario .meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+    .interactive-list{display:grid;gap:12px}
+    .flip{
+      border:1px solid var(--line);border-radius:18px;padding:16px;
+      background:rgba(255,255,255,.06);cursor:pointer;transition:.2s ease;
+    }
+    .flip:hover{background:rgba(0,212,255,.09)}
+    .flip .back{display:none;color:#dff7ff}
+    .flip.open .back{display:block}
+    .flip.open .front{display:none}
+
+    .flow{
+      display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:14px;align-items:stretch;margin-top:20px
+    }
+    .flow-step{
+      border:1px solid var(--line);border-radius:22px;padding:18px;background:rgba(255,255,255,.065);position:relative;
+    }
+    .flow-step:not(:last-child):after{
+      content:"→";position:absolute;right:-15px;top:50%;transform:translateY(-50%);
+      color:var(--cyan);font-size:1.6rem;font-weight:950;z-index:1
+    }
+    .flow-step b{display:block;color:var(--green);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+    .flow-step strong{font-size:1.05rem}
+
+    .timeline{position:relative;padding-left:28px;margin:24px 0}
+    .timeline:before{content:"";position:absolute;left:8px;top:4px;bottom:4px;width:2px;background:linear-gradient(var(--cyan),var(--teal))}
+    .titem{position:relative;margin-bottom:18px;padding:16px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.06)}
+    .titem:before{content:"";position:absolute;left:-26px;top:21px;width:14px;height:14px;border-radius:50%;background:var(--cyan);box-shadow:0 0 18px var(--cyan)}
+
+    .quiz-area{display:grid;gap:18px}
+    .quiz-card{border:1px solid var(--line);border-radius:24px;padding:24px;background:rgba(255,255,255,.07)}
+    .question-title{font-size:1.22rem;font-weight:850;line-height:1.4;margin-bottom:18px}
+    .option{
+      display:block;padding:14px 15px;border:1px solid var(--line);border-radius:16px;margin:10px 0;background:rgba(255,255,255,.055);cursor:pointer;transition:.2s ease;
+      color:#dff7ff
+    }
+    .option:hover{border-color:rgba(0,212,255,.35);background:rgba(0,212,255,.08)}
+    .option input{width:auto;margin-right:10px}
+    .quiz-toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+    .timer{font-size:1.15rem;font-weight:950;color:#fff;background:rgba(255,91,115,.13);border:1px solid rgba(255,91,115,.25);padding:10px 14px;border-radius:999px}
+    .result-box{padding:22px;border-radius:24px;border:1px solid var(--line);background:rgba(255,255,255,.08);margin-top:20px}
+
+    .accept-box{
+      border:1px solid rgba(18,214,164,.35);
+      background:rgba(18,214,164,.10);
+      border-radius:24px;
+      padding:20px;
+      margin:20px 0;
+    }
+    .accept-row{display:flex;gap:12px;align-items:flex-start;margin-top:14px}
+    .accept-row input{width:22px;height:22px;margin-top:2px}
+
+    .certificate{
+      max-width:1000px;
+      margin:0 auto;
+      background:#f8fbff;
+      color:#102033;
+      border-radius:22px;
+      padding:42px;
+      border:10px solid #0b6fff;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .certificate:before{
+      content:"";position:absolute;inset:18px;border:2px solid rgba(11,111,255,.18);border-radius:14px;pointer-events:none
+    }
+    .certificate h3{color:#061526;font-size:3rem;margin-top:8px}
+    .certificate p{color:#25384c}
+    .cert-grid{display:grid;grid-template-columns:1fr 190px;gap:22px;align-items:end;margin-top:22px}
+    .qr{
+      width:170px;height:170px;background:#fff;border:8px solid #fff;display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(7,1fr);gap:4px;
+      box-shadow:0 8px 24px rgba(0,0,0,.12)
+    }
+    .qr span{background:#0b1d2f;border-radius:2px}
+    .sign{border-top:2px solid #0b6fff;padding-top:8px;font-weight:800;text-align:center;margin-top:28px;color:#102033}
+
+    .dashboard-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .kpi{
+      border:1px solid var(--line);border-radius:22px;padding:18px;background:rgba(255,255,255,.07)
+    }
+    .kpi small{color:var(--muted);text-transform:uppercase;letter-spacing:.11em;font-weight:850}
+    .kpi strong{display:block;font-size:2.1rem;margin-top:6px;letter-spacing:-.05em}
+    .bar-chart{display:grid;gap:12px}
+    .bar-row{display:grid;grid-template-columns:160px 1fr 56px;gap:10px;align-items:center}
+    .bar-bg{height:14px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}
+    .bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--teal));width:0;transition:.7s ease}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:20px}
+    table{width:100%;border-collapse:collapse;min-width:760px}
+    th,td{padding:13px;border-bottom:1px solid rgba(255,255,255,.11);text-align:left;color:#d8eefb}
+    th{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:var(--green);background:rgba(255,255,255,.06)}
+    tr:last-child td{border-bottom:0}
+
+    .footer-actions{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:28px}
+    .mobile-menu{display:none}
+
+    .modal{
+      position:fixed;inset:0;background:rgba(0,0,0,.62);backdrop-filter:blur(12px);
+      display:none;align-items:center;justify-content:center;padding:24px;z-index:1000
+    }
+    .modal.open{display:flex}
+    .modal-card{width:min(760px,100%);border:1px solid var(--line);border-radius:28px;background:#071a2f;padding:28px;box-shadow:var(--shadow)}
+    .modal-card h3{margin:0 0 12px;font-size:2rem}
+    .modal-card p{color:#cde7f8;line-height:1.6}
+
+    @media(max-width:1100px){
+      .login-card{grid-template-columns:1fr}
+      .hero{min-height:auto}
+      .orbital{position:relative;right:auto;bottom:auto;margin:30px auto 0;width:250px;height:250px}
+      .layout{grid-template-columns:1fr}
+      .sidebar{position:fixed;z-index:80;left:-330px;transition:.25s ease;width:310px}
+      .sidebar.open{left:0}
+      .mobile-menu{display:inline-flex}
+      main{padding:16px}
+      .topbar{top:10px}
+      .grid.cols-2,.grid.cols-3,.grid.cols-4,.dashboard-grid{grid-template-columns:1fr}
+      .flow{grid-template-columns:1fr}
+      .flow-step:after{display:none}
+      .page-head{display:block}
+      .tag{display:inline-flex;margin-top:12px}
+    }
+
+    @media(max-width:680px){
+      .screen{padding:14px}
+      .hero,.login-panel,.page{padding:22px}
+      h1{font-size:3rem}
+      .lead{font-size:1rem}
+      .topbar{align-items:flex-start;flex-direction:column}
+      .status-pills{justify-content:flex-start}
+      .bar-row{grid-template-columns:1fr}
+      .cert-grid{grid-template-columns:1fr}
+      .certificate{padding:24px;border-width:6px}
+      .certificate h3{font-size:2.1rem}
+    }
+
+    @media print{
+      body{background:#fff}
+      body:before,body:after,.sidebar,.topbar,.footer-actions,.no-print{display:none!important}
+      .layout{display:block}
+      main{padding:0}
+      .stage{box-shadow:none;border:0;background:#fff}
+      .page{display:none!important}
+      .page.printable{display:block!important;padding:0}
+      .certificate{box-shadow:none;border-color:#0b6fff;break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section id="loginScreen" class="screen">
+      <div class="login-card glass">
+        <div class="hero">
+          <div class="brandline">
+            <div class="logo" aria-label="Skymarine"></div>
+            <div>
+              <div class="brand-title">SKYMARINE</div>
+              <div class="brand-sub">Treinamento interno · Uso interno</div>
+            </div>
+          </div>
+          <div class="kicker">Treinamento Malu</div>
+          <h1><span class="gradient-text">Incidentes da Cadeia Logística</span><br/>para o Time Comercial</h1>
+          <p class="lead">Uma jornada EAD visual, rastreável e interativa para transformar o time comercial em uma linha ativa de proteção da operação logística, do Programa OEA, da qualidade, do compliance e da segurança da informação.</p>
+          <div class="chips">
+            <span class="chip">OEA</span>
+            <span class="chip">Gestão de Riscos</span>
+            <span class="chip">Compliance</span>
+            <span class="chip">LGPD</span>
+            <span class="chip">Qualidade</span>
+            <span class="chip">Segurança da Cadeia Logística</span>
+          </div>
+          <div class="callout amber-callout" style="max-width:720px">
+            <strong>Experiência demonstrativa:</strong> este arquivo HTML simula controle de acesso, progresso, avaliação, aceite e certificado em navegador. Para produção, esses registros devem ser integrados a banco de dados, autenticação corporativa, trilhas de auditoria e backend seguro.
+          </div>
+          <div class="orbital" aria-hidden="true">
+            <div class="ship"></div>
+            <div class="dot d1"></div>
+            <div class="dot d2"></div>
+            <div class="dot d3"></div>
+          </div>
+        </div>
+        <div class="login-panel">
+          <h2 class="panel-title">Acesso individual</h2>
+          <p class="panel-help">Informe seus dados para iniciar. O código é pessoal, individual e intransferível.</p>
+          <label for="nameInput">Nome completo</label>
+          <input id="nameInput" placeholder="Ex.: Maria Silva" autocomplete="name" />
+          <label for="emailInput">E-mail corporativo</label>
+          <input id="emailInput" type="email" placeholder="nome@skymarine.com.br" autocomplete="email" />
+          <label for="roleInput">Cargo / área</label>
+          <input id="roleInput" placeholder="Ex.: Executivo Comercial · Comercial" />
+          <label for="codeInput">Código individual de acesso</label>
+          <input id="codeInput" placeholder="Ex.: SKY-2026-001" />
+          <div class="notice">
+            Para facilitar a prévia, qualquer código com pelo menos 6 caracteres será aceito. Em ambiente real, o código deve ser validado no servidor e vinculado ao cadastro do colaborador.
+          </div>
+          <button onclick="startTraining()">Iniciar treinamento</button>
+          <p class="tiny">Carga horária oficial: 1 hora · Tempo mínimo de permanência requerido: 45 minutos · Nota mínima: 8,0 · Máximo de 3 tentativas.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="trainingApp" class="layout hide">
+      <aside id="sidebar" class="sidebar">
+        <div class="side-logo">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <div class="brand-title">SKYMARINE</div>
+            <div class="brand-sub">R00 · Uso interno</div>
+          </div>
+        </div>
+
+        <div class="userbox">
+          <strong id="sideUser">Colaborador</strong>
+          <span id="sideEmail">email corporativo</span>
+          <div class="progress-shell"><div id="globalProgress" class="progress-bar"></div></div>
+          <span id="progressLabel">0% do conteúdo visualizado</span>
+        </div>
+
+        <div class="navlist" id="navList"></div>
+
+        <div class="card" style="padding:16px">
+          <h4 style="margin-top:0">Regras de conclusão</h4>
+          <p class="tiny">Visualizar 100% dos módulos, cumprir tempo mínimo, obter nota igual ou superior a 8,0 e registrar aceite eletrônico.</p>
+          <button class="small secondary" onclick="simulateTime()">Simular 45 min</button>
+        </div>
+      </aside>
+
+      <main>
+        <div class="topbar">
+          <button class="mobile-menu secondary" onclick="toggleSidebar()">☰ Menu</button>
+          <div>
+            <h2>Incidentes da Cadeia Logística para o Time Comercial</h2>
+            <div class="tiny">Código do treinamento: SKY-OEA-COM-001 · Revisão R00 · Classificação: USO INTERNO</div>
+          </div>
+          <div class="status-pills">
+            <span class="pill"><span class="pulse-dot"></span><span id="statusPill">Em andamento</span></span>
+            <span class="pill">Tempo: <span id="elapsedLabel">00:00</span></span>
+            <span class="pill">Tentativas: <span id="attemptsLabel">0/3</span></span>
+          </div>
+        </div>
+
+        <section class="stage">
+          <div id="page-home" class="page active"></div>
+          <div id="page-module" class="page"></div>
+          <div id="page-quiz" class="page"></div>
+          <div id="page-accept" class="page"></div>
+          <div id="page-certificate" class="page printable"></div>
+          <div id="page-dashboard" class="page"></div>
+        </section>
+      </main>
+    </section>
+  </div>
+
+  <div id="modal" class="modal" onclick="closeModal(event)">
+    <div class="modal-card">
+      <h3 id="modalTitle">Título</h3>
+      <p id="modalText">Texto</p>
+      <button onclick="closeModal()">Fechar</button>
+    </div>
+  </div>
+
+  <script>
+    const REQUIRED_SECONDS = 45 * 60;
+    const TRAINING = {
+      code: "SKY-OEA-COM-001",
+      title: "Incidentes da Cadeia Logística para o Time Comercial",
+      version: "R00",
+      classification: "USO INTERNO",
+      passingScore: 8,
+      maxAttempts: 3,
+      quizMinutes: 15
+    };
+
+    const modules = [
+      {
+        id: 1,
+        title: "Objetivo do treinamento",
+        subtitle: "Por que isso existe e por que importa",
+        icon: "🎯",
+        intro: "Fortalecer a conscientização do time comercial sobre segurança da cadeia logística, prevenção de incidentes, conformidade OEA, qualidade, compliance, segurança da informação e LGPD.",
+        blocks: [
+          ["O ponto central", "O comercial não é apenas a frente de relacionamento com o cliente. Ele também é uma camada de proteção da operação, porque identifica sinais, recebe informações sensíveis e pode evitar que uma ocorrência pequena se transforme em crise."],
+          ["Evidência formal", "A realização do treinamento, o aceite eletrônico, a avaliação e o certificado compõem evidência para auditorias internas, externas, clientes, Programa OEA, Compliance e Sistema de Gestão da Qualidade."],
+          ["Comportamento esperado", "Diante de qualquer sinal estranho, divergência, suspeita documental ou pressão comercial fora do padrão, a postura correta é interromper a normalização do risco, comunicar e registrar."]
+        ],
+        interactionTitle: "Clique para revelar os 3 compromissos do participante",
+        flips: [
+          ["Compromisso 1", "Reconhecer sinais de incidente na cadeia logística e não tratar eventos suspeitos como simples ruído operacional."],
+          ["Compromisso 2", "Comunicar rapidamente os responsáveis definidos no fluxo, evitando decisões isoladas ou informais."],
+          ["Compromisso 3", "Registrar informações objetivas no formulário corporativo, preservando evidências, horários, envolvidos e impactos."]
+        ],
+        scenario: {
+          badge: "Situação real",
+          text: "Um cliente pressiona para liberar uma carga com dados incompletos e diz que a documentação será enviada depois. A operação está atrasada e a área comercial quer preservar o relacionamento.",
+          question: "Qual é a melhor conduta?",
+          answer: "Não liberar com base apenas em pressão comercial. A situação deve ser comunicada e registrada para validação pelas áreas responsáveis."
+        }
+      },
+      {
+        id: 2,
+        title: "Cadeia Logística / Suprimentos",
+        subtitle: "A operação como ecossistema de risco",
+        icon: "🌐",
+        intro: "A cadeia logística internacional envolve clientes, fornecedores, documentos, cargas, armazéns, portos, aeroportos, transportadores, controles aduaneiros e múltiplas interfaces humanas. Cada elo pode gerar risco.",
+        blocks: [
+          ["Visão sistêmica", "Um incidente raramente nasce isolado. Ele normalmente aparece como uma combinação de pressa, documentação frágil, exceção operacional, informação incompleta ou comportamento atípico."],
+          ["Ponto de entrada", "O time comercial pode ser o primeiro a perceber mudanças de comportamento do cliente, urgências incompatíveis, solicitações incomuns ou tentativas de contornar controles."],
+          ["Segurança da cadeia", "Proteger a cadeia logística significa preservar integridade da carga, confiabilidade documental, rastreabilidade, reputação e continuidade da operação."]
+        ],
+        interactionTitle: "Clique nos elos críticos da cadeia",
+        flips: [
+          ["Cliente", "Pode solicitar exceções, alterar instruções ou apresentar informações inconsistentes."],
+          ["Documentação", "Divergências em dados, descrição de mercadoria, origem, destino ou responsáveis podem indicar fraude ou erro crítico."],
+          ["Carga", "Violação, lacre rompido, embalagem incompatível ou contaminação exigem comunicação imediata."],
+          ["Operação", "Atrasos, desvios, mudanças de rota e indisponibilidade de informação podem elevar o risco."]
+        ],
+        scenario: {
+          badge: "Alerta de cadeia logística",
+          text: "Durante a tratativa comercial, o cliente muda repentinamente o destino final e envia documentos com dados divergentes entre descrição, peso e NCM.",
+          question: "Isso é apenas ajuste comercial?",
+          answer: "Não. Divergência documental e mudança de destino são sinais que precisam ser avaliados e registrados antes de seguir."
+        }
+      },
+      {
+        id: 3,
+        title: "O papel do Comercial na segurança da operação",
+        subtitle: "Relacionamento com responsabilidade",
+        icon: "🤝",
+        intro: "O comercial protege a empresa quando identifica sinais precoces, não promete exceções inseguras, orienta o cliente corretamente e aciona o fluxo formal de comunicação.",
+        blocks: [
+          ["Não assumir sozinho", "A decisão sobre risco operacional, regulatório ou de segurança não deve ser tomada isoladamente pelo comercial."],
+          ["Não normalizar desvio", "Frases como 'sempre fizemos assim', 'é só desta vez' ou 'o cliente está com pressa' não substituem controle."],
+          ["Comunicar bem", "O comercial deve reportar com clareza: o que aconteceu, quando, quem está envolvido, qual carga/processo, qual evidência existe e qual impacto percebido."]
+        ],
+        interactionTitle: "Clique para separar comportamento seguro de comportamento arriscado",
+        flips: [
+          ["Seguro", "Validar exceções com as áreas responsáveis antes de assumir compromisso com o cliente."],
+          ["Arriscado", "Prometer liberação, alteração de processo ou tratamento excepcional sem análise formal."],
+          ["Seguro", "Registrar informações objetivas e preservar mensagens, documentos, fotos e evidências."],
+          ["Arriscado", "Resolver por WhatsApp, ligação informal ou acordo verbal sem registro."]
+        ],
+        scenario: {
+          badge: "Pressão comercial",
+          text: "Um cliente estratégico pede para ignorar temporariamente uma inconsistência documental, alegando que a carga é urgente e que qualquer atraso gerará perda financeira.",
+          question: "Como equilibrar cliente e segurança?",
+          answer: "Preservar o relacionamento com transparência, mas acionar o processo formal. Segurança da cadeia logística não deve ser negociada informalmente."
+        }
+      },
+      {
+        id: 4,
+        title: "O que é um Incidente de Segurança",
+        subtitle: "Sinais que exigem resposta estruturada",
+        icon: "🚨",
+        intro: "Incidente de segurança é qualquer evento, suspeita ou condição que possa comprometer a integridade da carga, a segurança da cadeia logística, a conformidade regulatória, os dados, os processos ou a reputação da empresa.",
+        blocks: [
+          ["Incidente não é só confirmação", "A suspeita já é suficiente para comunicar. Esperar certeza absoluta pode atrasar a contenção e prejudicar evidências."],
+          ["Exemplos práticos", "Lacre rompido, violação de carga, fraude documental, informação inconsistente, acesso indevido, tentativa de burlar controle, contaminação ou carga suspeita."],
+          ["Critério de atenção", "Se parece estranho, foge do padrão, envolve pressão incomum ou compromete rastreabilidade, trate como sinal de alerta."]
+        ],
+        interactionTitle: "Clique nos sinais de incidente",
+        flips: [
+          ["Lacre rompido", "Pode indicar violação, acesso não autorizado ou comprometimento da integridade da carga."],
+          ["Documento inconsistente", "Pode indicar erro grave, fraude, declaração incorreta ou tentativa de ocultação."],
+          ["Pressa incomum", "Pode indicar tentativa de contornar controles, especialmente quando combinada com dados incompletos."],
+          ["Acesso ou informação indevida", "Pode envolver exposição de dados, quebra de confidencialidade ou falha de segurança da informação."]
+        ],
+        scenario: {
+          badge: "Sinal fraco",
+          text: "A descrição da mercadoria muda entre propostas, documentos e e-mails. Ninguém confirma se foi erro de digitação ou alteração real.",
+          question: "Quando comunicar?",
+          answer: "Imediatamente ao identificar a inconsistência relevante. O fluxo de incidente serve para investigar e decidir com base em evidências."
+        }
+      },
+      {
+        id: 5,
+        title: "O que não podemos transportar",
+        subtitle: "Limites que protegem a empresa",
+        icon: "⛔",
+        intro: "A empresa não deve aceitar, prometer ou movimentar cargas proibidas, suspeitas, sem documentação adequada, com divergências críticas ou sem autorização exigida pelos controles internos e regulatórios.",
+        blocks: [
+          ["Proibido ou irregular", "Mercadorias ilícitas, contrabando, itens não declarados, cargas sem documentação obrigatória ou com indícios de fraude não podem seguir o fluxo normal."],
+          ["Perigoso sem autorização", "Produtos perigosos, restritos ou sensíveis exigem validação documental, regulatória e operacional antes de qualquer tratativa."],
+          ["Suspeita relevante", "Compartimentos ocultos, embalagens violadas, lacres divergentes, origem/destino incoerente ou instruções contraditórias exigem bloqueio preventivo e comunicação."]
+        ],
+        interactionTitle: "Clique para ver o bloqueio correto",
+        flips: [
+          ["Carga sem documento", "Não seguir sem validação. Solicitar regularização e acionar responsável definido."],
+          ["Mercadoria divergente", "Não presumir erro simples. Registrar divergência e aguardar análise."],
+          ["Item perigoso", "Exigir documentação e autorização aplicável. Não assumir capacidade operacional sem validação."],
+          ["Cliente pede exceção", "Exceção sem aprovação formal não deve ser aceita."]
+        ],
+        scenario: {
+          badge: "Linha vermelha",
+          text: "A documentação informa um tipo de carga, mas imagens e descrição informal indicam item diferente, potencialmente restrito.",
+          question: "O que fazer?",
+          answer: "Interromper a tratativa operacional, registrar e acionar as áreas responsáveis para validação antes de qualquer avanço."
+        }
+      },
+      {
+        id: 6,
+        title: "Processo de Gestão de Incidentes",
+        subtitle: "Da detecção ao aprendizado",
+        icon: "🧭",
+        intro: "O processo organiza a resposta: detectar, comunicar, registrar, conter, analisar, tratar, encerrar e aprender. O objetivo não é culpar pessoas, mas reduzir impacto e preservar evidências.",
+        blocks: [
+          ["Detecção", "Qualquer colaborador pode identificar uma suspeita. O comercial deve valorizar sinais precoces e não esperar agravamento."],
+          ["Comunicação e registro", "A comunicação precisa ser rápida e o registro precisa ser completo. Sem registro, a organização perde rastreabilidade."],
+          ["Tratamento", "As áreas responsáveis avaliam impacto, definem contenção, conduzem investigação, formalizam ações e encerram com lições aprendidas."]
+        ],
+        interactionTitle: "Clique nas etapas do processo",
+        flips: [
+          ["1. Detectar", "Identificar evento, suspeita, comportamento atípico ou divergência relevante."],
+          ["2. Comunicar", "Acionar o fluxo formal, com objetividade e sem exposição desnecessária."],
+          ["3. Registrar", "Preencher formulário com fatos, evidências, horários, envolvidos e impacto percebido."],
+          ["4. Tratar", "Aguardar orientação das áreas responsáveis, apoiar investigação e não apagar evidências."]
+        ],
+        scenario: {
+          badge: "Gestão estruturada",
+          text: "O comercial recebe informação de que uma carga pode ter sido violada em etapa anterior, mas ainda não há confirmação formal.",
+          question: "Qual é o primeiro passo?",
+          answer: "Comunicar e registrar a suspeita, preservando evidências. A investigação validará se houve ou não incidente."
+        }
+      },
+      {
+        id: 7,
+        title: "Fluxograma de Comunicação",
+        subtitle: "Quem acionar e em que ordem",
+        icon: "🔁",
+        intro: "O fluxo evita ruído, duplicidade, perda de evidência e decisões paralelas. Toda comunicação deve ser objetiva, rastreável e direcionada aos responsáveis corretos.",
+        blocks: [
+          ["1. Identificou sinal?", "Colete as informações mínimas: cliente, carga, documento, data/hora, evidência e impacto percebido."],
+          ["2. Comunique internamente", "Acione o Departamento da Qualidade e Gestão de Riscos, gestor imediato e demais áreas previstas no procedimento."],
+          ["3. Registre formalmente", "Use o formulário corporativo de registro de incidentes. Evidências devem ser preservadas e anexadas quando aplicável."]
+        ],
+        interactionTitle: "Clique nos pontos de comunicação crítica",
+        flips: [
+          ["Não divulgar externamente sem orientação", "Comunicação com cliente, parceiro, autoridade ou terceiro deve seguir orientação formal."],
+          ["Não apagar evidência", "Mensagens, documentos, fotos, protocolos e horários podem ser essenciais na investigação."],
+          ["Não pular gestor/qualidade", "A rastreabilidade depende de comunicação formal e tempestiva."],
+          ["Não resolver no improviso", "Ações improvisadas podem agravar impacto, contaminar evidências ou criar risco regulatório."]
+        ],
+        scenario: {
+          badge: "Fluxo correto",
+          text: "Você recebe uma foto de uma embalagem aparentemente violada e o cliente pede uma resposta imediata.",
+          question: "O que responder?",
+          answer: "Registrar recebimento, informar que a situação será analisada pelo fluxo interno e acionar imediatamente os responsáveis, sem concluir causa ou responsabilidade."
+        }
+      },
+      {
+        id: 8,
+        title: "Formulário de Registro de Incidentes",
+        subtitle: "Evidência boa é evidência objetiva",
+        icon: "📝",
+        intro: "O formulário transforma percepção em evidência. Um bom registro reduz retrabalho, acelera investigação, fortalece auditorias e protege a empresa.",
+        blocks: [
+          ["Dados essenciais", "Data, hora, cliente, processo, carga, documento, local, envolvidos, descrição objetiva, evidências anexas e impacto percebido."],
+          ["Descrição adequada", "Fatos antes de opiniões. Evite conclusões sem evidência. Use linguagem clara, neutra e verificável."],
+          ["Rastreabilidade", "O registro deve permitir reconstruir o evento: quem percebeu, quando percebeu, o que foi feito e quem foi comunicado."]
+        ],
+        interactionTitle: "Clique para ver exemplos de bons registros",
+        flips: [
+          ["Bom registro", "Às 10h42, recebido e-mail do cliente X com BL divergente do pedido comercial. Campo de destino alterado de Santos para Paranaguá. Evidência anexa."],
+          ["Registro fraco", "Cliente mandou documento estranho. Acho que tem algo errado."],
+          ["Bom registro", "Foto recebida às 14h05 indica lacre com numeração divergente da documentação. Gestor e Qualidade acionados às 14h12."],
+          ["Registro fraco", "Parece que violaram a carga, mas não tenho certeza."]
+        ],
+        scenario: {
+          badge: "Registro formal",
+          text: "Você precisa abrir um registro de suspeita com informações incompletas, mas relevantes.",
+          question: "Pode registrar mesmo sem tudo confirmado?",
+          answer: "Sim. Registre como suspeita, deixe claro o que é fato, o que está pendente e quais evidências foram recebidas."
+        }
+      }
+    ];
+
+    const questionBank = [
+      {q:"Qual é o objetivo principal do treinamento?", a:"Fortalecer a conscientização sobre segurança da cadeia logística, prevenção de incidentes e conformidade.", o:["Ensinar técnicas de vendas consultivas.","Substituir o procedimento comercial.","Reduzir a necessidade de registros formais."]},
+      {q:"O código individual de acesso deve ser:", a:"Pessoal, individual, único e intransferível.", o:["Compartilhado com a equipe para acelerar a conclusão.","Usado por qualquer pessoa do departamento.","Opcional quando o colaborador conhece o conteúdo."]},
+      {q:"Quando uma suspeita de incidente deve ser comunicada?", a:"Assim que identificada, mesmo antes de confirmação completa.", o:["Somente após prova definitiva.","Apenas quando houver prejuízo financeiro.","Somente ao final do mês."]},
+      {q:"Qual conduta é mais adequada diante de divergência documental relevante?", a:"Registrar, comunicar e aguardar validação das áreas responsáveis.", o:["Ignorar se o cliente for estratégico.","Corrigir informalmente sem evidência.","Liberar e resolver depois."]},
+      {q:"Qual item deve constar em um bom registro de incidente?", a:"Data, hora, envolvidos, descrição objetiva, evidências e impacto percebido.", o:["Apenas opinião pessoal.","Somente o nome do cliente.","Apenas uma mensagem verbal ao gestor."]},
+      {q:"O treinamento somente deve ser considerado concluído após:", a:"Visualização integral, tempo mínimo, avaliação aprovada e aceite eletrônico.", o:["Abertura da primeira tela.","Leitura parcial do conteúdo.","Apenas presença em reunião."]},
+      {q:"Qual é a nota mínima de aprovação?", a:"8,0.", o:["5,0.","6,0.","7,0."]},
+      {q:"Qual é o número máximo de tentativas previsto?", a:"3 tentativas.", o:["1 tentativa.","2 tentativas.","Tentativas ilimitadas."]},
+      {q:"O aceite eletrônico serve para:", a:"Formalizar a ciência, compreensão e compromisso do colaborador, além de apoiar evidência de conclusão.", o:["Substituir o quiz.","Permitir compartilhamento externo do conteúdo.","Eliminar a necessidade de certificado."]},
+      {q:"O conteúdo do treinamento possui classificação:", a:"USO INTERNO.", o:["Público irrestrito.","Confidencial de cliente.","Sem classificação."]},
+      {q:"Qual comportamento do comercial reduz risco operacional?", a:"Acionar o fluxo formal antes de prometer exceções.", o:["Prometer liberação para preservar relacionamento.","Resolver tudo por mensagem informal.","Assumir que divergências são normais."]},
+      {q:"Lacre rompido ou divergente é um exemplo de:", a:"Sinal de possível incidente de segurança.", o:["Ajuste comercial rotineiro.","Falha sem necessidade de registro.","Informação irrelevante para o comercial."]},
+      {q:"Em caso de pressão do cliente para ignorar controle, a postura correta é:", a:"Explicar que a validação formal é necessária e comunicar internamente.", o:["Ignorar o controle para evitar conflito.","Pedir ao cliente que envie depois.","Excluir a evidência para não atrasar."]},
+      {q:"A função do formulário de incidentes é:", a:"Registrar fatos e evidências de forma rastreável.", o:["Criar burocracia sem valor.","Substituir toda investigação.","Permitir comunicação anônima com o cliente."]},
+      {q:"Qual frase representa melhor a cultura desejada?", a:"Isso está estranho. Vou comunicar e registrar.", o:["Deve ser só uma falha.","Depois volta ao normal.","Não é comigo."]},
+      {q:"O comercial deve divulgar informações de incidente externamente?", a:"Não sem orientação formal das áreas responsáveis.", o:["Sim, sempre que o cliente pedir.","Sim, se o cliente for estratégico.","Sim, desde que por telefone."]},
+      {q:"Qual é uma evidência útil para investigação?", a:"E-mail, foto, documento, horário, protocolo ou mensagem recebida.", o:["Memória informal sem registro.","Comentário genérico.","Suposição sem fato."]},
+      {q:"Um produto perigoso sem autorização deve:", a:"Ser bloqueado para validação antes de qualquer avanço.", o:["Seguir para não perder prazo.","Ser aceito se o cliente prometer regularizar.","Ser tratado como carga comum."]},
+      {q:"A retenção mínima dos registros prevista no material é:", a:"5 anos.", o:["6 meses.","1 ano.","2 anos."]},
+      {q:"Após 12 meses, o treinamento deve:", a:"Vencer e gerar necessidade de reciclagem.", o:["Ser apagado automaticamente.","Ficar válido para sempre.","Ser dispensado para gestores."]},
+      {q:"Qual dado pessoal deve ser protegido pela plataforma?", a:"Dados de cadastro, acessos, avaliações, certificados e aceites.", o:["Apenas o primeiro nome.","Nenhum dado, pois é treinamento interno.","Somente a nota final."]},
+      {q:"O dashboard gerencial deve apoiar:", a:"Acompanhamento de conclusão, pendências, notas, tentativas, vencimentos e certificados.", o:["Controle de vendas por cliente.","Definição de comissões comerciais.","Escolha de fornecedores sem critérios."]},
+      {q:"A versão concluída pelo colaborador deve ser registrada porque:", a:"É evidência de qual conteúdo foi efetivamente realizado.", o:["Serve apenas para estética do certificado.","Não tem utilidade em auditoria.","Substitui logs de acesso."]},
+      {q:"Qual é o risco de resolver um incidente apenas por WhatsApp sem registro?", a:"Perda de rastreabilidade e fragilidade de evidência.", o:["Aumento automático de segurança.","Redução garantida de risco.","Aprovação automática em auditoria."]},
+      {q:"Uma descrição objetiva deve priorizar:", a:"Fatos verificáveis, horários, evidências e envolvidos.", o:["Culpados prováveis sem prova.","Opiniões e impressões vagas.","Termos emocionais."]},
+      {q:"Quem pode identificar um sinal de incidente?", a:"Qualquer colaborador, incluindo o time comercial.", o:["Apenas a diretoria.","Somente auditores externos.","Apenas a área jurídica."]},
+      {q:"O que fazer ao receber imagem de embalagem violada?", a:"Preservar a imagem, registrar e acionar o fluxo de comunicação.", o:["Apagar para evitar preocupação.","Responder ao cliente com conclusão imediata.","Encaminhar externamente sem autorização."]},
+      {q:"O Programa OEA se relaciona ao treinamento porque:", a:"O treinamento gera evidência de conscientização e segurança da cadeia logística.", o:["Substitui todos os controles aduaneiros.","Elimina necessidade de auditoria.","É apenas um tema comercial sem relação operacional."]},
+      {q:"A plataforma deve impedir avanço direto para o quiz para garantir:", a:"Efetiva participação e visualização do conteúdo.", o:["Maior dificuldade sem motivo.","Menor rastreabilidade.","Ausência de evidência."]},
+      {q:"Caso o colaborador reprove definitivamente, a plataforma deve:", a:"Bloquear novas tentativas e notificar colaborador, gestor e Qualidade/Gestão de Riscos.", o:["Apagar o histórico.","Emitir certificado mesmo assim.","Permitir tentativas infinitas sem autorização."]}
+    ];
+
+    let state = {
+      user:null,
+      current:"home",
+      currentModule:null,
+      viewed:{},
+      moduleStart:null,
+      moduleTimes:{},
+      startedAt:null,
+      elapsedOffset:0,
+      attempts:0,
+      quiz:null,
+      quizTimer:null,
+      quizRemaining:TRAINING.quizMinutes*60,
+      passed:false,
+      score:null,
+      accepted:false,
+      certCode:null
+    };
+
+    function save(){
+      const toSave = {...state, quizTimer:null};
+      localStorage.setItem("maluTrainingState", JSON.stringify(toSave));
+    }
+
+    function load(){
+      const raw = localStorage.getItem("maluTrainingState");
+      if(!raw) return;
+      try{
+        const data = JSON.parse(raw);
+        state = {...state, ...data, quizTimer:null};
+        if(state.startedAt) {
+          showApp();
+          renderAll();
+          startElapsedTicker();
+        }
+      }catch(e){console.warn(e)}
+    }
+
+    function startTraining(){
+      const name = document.getElementById("nameInput").value.trim();
+      const email = document.getElementById("emailInput").value.trim();
+      const role = document.getElementById("roleInput").value.trim();
+      const code = document.getElementById("codeInput").value.trim();
+      if(!name || !email || !role || code.length < 6){
+        openModal("Acesso incompleto", "Preencha nome, e-mail, cargo/área e um código individual com pelo menos 6 caracteres para iniciar a demonstração.");
+        return;
+      }
+      state.user = {name,email,role,code,ip:"Registrado no backend em produção", browser:navigator.userAgent, accessDate:new Date().toISOString()};
+      state.startedAt = Date.now();
+      state.elapsedOffset = 0;
+      state.current = "home";
+      save();
+      showApp();
+      renderAll();
+      startElapsedTicker();
+    }
+
+    function showApp(){
+      document.getElementById("loginScreen").classList.add("hide");
+      document.getElementById("trainingApp").classList.remove("hide");
+    }
+
+    function renderAll(){
+      renderSidebar();
+      renderHome();
+      renderQuiz();
+      renderAccept();
+      renderCertificate();
+      renderDashboard();
+      updateTopbar();
+      showPage(state.current || "home");
+    }
+
+    function renderSidebar(){
+      if(state.user){
+        document.getElementById("sideUser").textContent = state.user.name;
+        document.getElementById("sideEmail").textContent = state.user.email;
+      }
+      const nav = document.getElementById("navList");
+      nav.innerHTML = "";
+      nav.appendChild(navButton("home", "00", "Visão geral", state.current === "home", false));
+      modules.forEach(m => nav.appendChild(navButton("module-"+m.id, String(m.id).padStart(2,"0"), m.title, state.currentModule === m.id && state.current === "module", !!state.viewed[m.id])));
+      nav.appendChild(navButton("quiz", "Q", "Avaliação final", state.current === "quiz", state.passed));
+      nav.appendChild(navButton("accept", "A", "Aceite eletrônico", state.current === "accept", state.accepted));
+      nav.appendChild(navButton("certificate", "C", "Certificado", state.current === "certificate", state.passed && state.accepted));
+      nav.appendChild(navButton("dashboard", "D", "Dashboard", state.current === "dashboard", false));
+      updateProgress();
+    }
+
+    function navButton(target, num, label, active, done){
+      const btn = document.createElement("div");
+      btn.className = "navitem" + (active ? " active" : "") + (done ? " done" : "");
+      btn.innerHTML = `<span class="num">${num}</span><span>${label}</span>`;
+      btn.onclick = () => {
+        if(target.startsWith("module-")) openModule(parseInt(target.split("-")[1]));
+        else if(target === "quiz") {
+          if(!allModulesViewed()) openModal("Quiz bloqueado", "Você precisa visualizar 100% dos módulos antes de acessar a avaliação final.");
+          else showPage("quiz");
+        } else if(target === "accept") {
+          if(!state.passed) openModal("Aceite bloqueado", "O aceite eletrônico será liberado após aprovação na avaliação final.");
+          else showPage("accept");
+        } else if(target === "certificate") {
+          if(!state.passed || !state.accepted) openModal("Certificado bloqueado", "O certificado será liberado após aprovação no quiz e aceite eletrônico.");
+          else showPage("certificate");
+        } else showPage(target);
+        toggleSidebar(false);
+      };
+      return btn;
+    }
+
+    function renderHome(){
+      const el = document.getElementById("page-home");
+      const completed = Object.keys(state.viewed).length;
+      el.innerHTML = `
+        <div class="page-head">
+          <div>
+            <div class="kicker">Jornada de aprendizagem</div>
+            <h3><span class="gradient-text">Da percepção comercial</span><br/>à resposta formal</h3>
+            <p class="intro">Este treinamento mostra como o time comercial deve reconhecer sinais de incidente, comunicar corretamente, registrar evidências e contribuir para a segurança da cadeia logística da Skymarine.</p>
+          </div>
+          <span class="tag">${completed}/8 módulos visualizados</span>
+        </div>
+
+        <div class="grid cols-4">
+          <div class="card"><div class="icon">🔐</div><h4>Acesso rastreável</h4><p>Código individual, cadastro do colaborador, controle de tentativas e histórico de conclusão.</p></div>
+          <div class="card"><div class="icon">🧩</div><h4>8 módulos objetivos</h4><p>Conteúdo direto, visual e baseado em situações reconhecíveis pelo time comercial.</p></div>
+          <div class="card"><div class="icon">🧠</div><h4>Quiz randomizado</h4><p>Banco de 30 questões, seleção automática de 10 perguntas e nota mínima 8,0.</p></div>
+          <div class="card"><div class="icon">🏅</div><h4>Certificado</h4><p>Emissão simulada após aprovação e aceite eletrônico com declaração LGPD/OEA.</p></div>
+        </div>
+
+        <div class="callout">
+          <strong>Como concluir:</strong> avance pelos 8 módulos, interaja com os cards, faça a avaliação final, registre o aceite eletrônico e gere o certificado demonstrativo.
+        </div>
+
+        <div class="mission-map">
+          ${modules.map(m => `
+            <div class="module-tile ${state.viewed[m.id] ? "done" : ""}" onclick="openModule(${m.id})">
+              <div class="module-no">MÓDULO ${String(m.id).padStart(2,"0")}</div>
+              <h4>${m.icon} ${m.title}</h4>
+              <p>${m.subtitle}</p>
+            </div>`).join("")}
+        </div>
+
+        <div class="footer-actions">
+          <button class="secondary" onclick="resetTraining()">Reiniciar demonstração</button>
+          <button onclick="openModule(1)">Começar módulo 01</button>
+        </div>
+      `;
+    }
+
+    function openModule(id){
+      finalizeModuleTime();
+      state.current = "module";
+      state.currentModule = id;
+      state.moduleStart = Date.now();
+      state.viewed[id] = true;
+      save();
+      renderModule();
+      renderSidebar();
+      updateTopbar();
+      showPage("module");
+    }
+
+    function renderModule(){
+      const m = modules.find(x=>x.id===state.currentModule) || modules[0];
+      const el = document.getElementById("page-module");
+      el.innerHTML = `
+        <div class="page-head">
+          <div>
+            <div class="kicker">Módulo ${String(m.id).padStart(2,"0")} · ${TRAINING.classification}</div>
+            <h3><span class="gradient-text">${m.title}</span></h3>
+            <p class="intro">${m.intro}</p>
+          </div>
+          <span class="tag">${TRAINING.code} · ${TRAINING.version}</span>
+        </div>
+
+        <div class="grid cols-3">
+          ${m.blocks.map((b,i)=>`
+            <div class="card">
+              <div class="big-number">${String(i+1).padStart(2,"0")}</div>
+              <div class="icon">${m.icon}</div>
+              <h4>${b[0]}</h4>
+              <p>${b[1]}</p>
+            </div>`).join("")}
+        </div>
+
+        <div class="scenario">
+          <div class="meta">
+            <span class="pill">${m.scenario.badge}</span>
+            <span class="pill">Decisão comercial segura</span>
+          </div>
+          <h4>${m.scenario.text}</h4>
+          <p><strong>${m.scenario.question}</strong></p>
+          <button class="small" onclick="openModal('Resposta recomendada', '${escapeHtml(m.scenario.answer)}')">Ver resposta recomendada</button>
+        </div>
+
+        <div class="card">
+          <h4>${m.interactionTitle}</h4>
+          <div class="interactive-list">
+            ${m.flips.map(f=>`
+              <div class="flip" onclick="this.classList.toggle('open')">
+                <div class="front"><strong>${f[0]}</strong><p class="tiny">Clique para revelar.</p></div>
+                <div class="back"><strong>${f[0]}</strong><p>${f[1]}</p></div>
+              </div>`).join("")}
+          </div>
+        </div>
+
+        ${m.id === 6 ? processFlowHtml() : ""}
+        ${m.id === 7 ? communicationFlowHtml() : ""}
+        ${m.id === 8 ? incidentFormHtml() : ""}
+
+        <div class="footer-actions">
+          <button class="secondary" onclick="${m.id === 1 ? "showPage('home')" : "openModule("+(m.id-1)+")"}">Voltar</button>
+          <div>
+            <button class="secondary" onclick="showPage('home')">Mapa do treinamento</button>
+            ${m.id < modules.length ? `<button onclick="openModule(${m.id+1})">Próximo módulo</button>` : `<button onclick="goToQuiz()">Ir para avaliação</button>`}
+          </div>
+        </div>
+      `;
+    }
+
+    function processFlowHtml(){
+      const steps = [
+        ["Detectar","Sinal, suspeita ou evento atípico identificado."],
+        ["Comunicar","Fluxo formal acionado com informações mínimas."],
+        ["Registrar","Formulário preenchido com fatos e evidências."],
+        ["Tratar","Áreas responsáveis analisam, contêm e encerram."]
+      ];
+      return `<div class="card"><h4>Fluxo executivo de resposta</h4><div class="flow">${steps.map((s,i)=>`<div class="flow-step"><b>Etapa ${i+1}</b><strong>${s[0]}</strong><p>${s[1]}</p></div>`).join("")}</div></div>`;
+    }
+
+    function communicationFlowHtml(){
+      const items = [
+        ["1. Identificação", "Comercial percebe sinal estranho, divergência, violação ou pressão incomum."],
+        ["2. Coleta mínima", "Cliente, carga, documento, data/hora, evidência, impacto e pessoas envolvidas."],
+        ["3. Comunicação interna", "Gestor imediato e Qualidade/Gestão de Riscos são acionados conforme procedimento."],
+        ["4. Registro formal", "Formulário corporativo é preenchido e evidências são preservadas."],
+        ["5. Direcionamento", "Áreas responsáveis definem resposta, comunicação externa e ações de contenção."]
+      ];
+      return `<div class="card"><h4>Linha do tempo de comunicação</h4><div class="timeline">${items.map(i=>`<div class="titem"><strong>${i[0]}</strong><p>${i[1]}</p></div>`).join("")}</div></div>`;
+    }
+
+    function incidentFormHtml(){
+      return `
+        <div class="card">
+          <h4>Simulador de registro de incidente</h4>
+          <p>Preencha os campos para visualizar como um registro objetivo deve ser estruturado.</p>
+          <div class="grid cols-2">
+            <div><label>Cliente / processo</label><input id="simClient" placeholder="Ex.: Cliente X · Importação 123" /></div>
+            <div><label>Tipo de sinal</label><select id="simType"><option>Divergência documental</option><option>Lacre rompido</option><option>Suspeita de carga proibida</option><option>Pressão por exceção</option><option>Indício de violação</option></select></div>
+          </div>
+          <label>Descrição objetiva</label>
+          <textarea id="simDesc" placeholder="Descreva fatos, horários, documentos, evidências e impacto percebido."></textarea>
+          <div style="margin-top:14px"><button class="small" onclick="generateIncidentRecord()">Gerar registro modelo</button></div>
+          <div id="recordOutput" class="callout hide"></div>
+        </div>
+      `;
+    }
+
+    function generateIncidentRecord(){
+      const client = document.getElementById("simClient").value.trim() || "Cliente/processo não informado";
+      const type = document.getElementById("simType").value;
+      const desc = document.getElementById("simDesc").value.trim() || "Descrição pendente de complemento pelo responsável.";
+      const out = document.getElementById("recordOutput");
+      out.classList.remove("hide");
+      out.innerHTML = `<strong>Registro modelo:</strong><br/>
+        Data/hora do registro: ${new Date().toLocaleString("pt-BR")}<br/>
+        Cliente/processo: ${escapeHtml(client)}<br/>
+        Tipo de sinal: ${escapeHtml(type)}<br/>
+        Descrição objetiva: ${escapeHtml(desc)}<br/>
+        Ação recomendada: comunicar gestor imediato e Qualidade/Gestão de Riscos, preservar evidências e aguardar orientação formal.`;
+    }
+
+    function finalizeModuleTime(){
+      if(state.current === "module" && state.currentModule && state.moduleStart){
+        const delta = Math.floor((Date.now() - state.moduleStart)/1000);
+        state.moduleTimes[state.currentModule] = (state.moduleTimes[state.currentModule] || 0) + delta;
+        state.moduleStart = null;
+        save();
+      }
+    }
+
+    function allModulesViewed(){
+      return modules.every(m => state.viewed[m.id]);
+    }
+
+    function updateProgress(){
+      const moduleProgress = Object.keys(state.viewed).length / modules.length;
+      const extra = state.passed ? .1 : 0;
+      const accept = state.accepted ? .1 : 0;
+      const pct = Math.min(100, Math.round((moduleProgress*.8 + extra + accept) * 100));
+      document.getElementById("globalProgress").style.width = pct + "%";
+      document.getElementById("progressLabel").textContent = `${pct}% do treinamento concluído`;
+      return pct;
+    }
+
+    function goToQuiz(){
+      if(!allModulesViewed()){
+        openModal("Conteúdo pendente", "Visualize todos os módulos antes de iniciar a avaliação final.");
+        return;
+      }
+      showPage("quiz");
+    }
+
+    function renderQuiz(){
+      const el = document.getElementById("page-quiz");
+      const canQuiz = allModulesViewed();
+      el.innerHTML = `
+        <div class="page-head">
+          <div>
+            <div class="kicker">Avaliação final</div>
+            <h3><span class="gradient-text">10 perguntas, 15 minutos</span></h3>
+            <p class="intro">A avaliação seleciona 10 questões de um banco de 30, com alternativas randomizadas. Nota mínima: 8,0. Máximo de 3 tentativas.</p>
+          </div>
+          <span class="tag">Tentativas ${state.attempts}/${TRAINING.maxAttempts}</span>
+        </div>
+        <div class="callout ${canQuiz ? "" : "danger-callout"}">
+          ${canQuiz ? "<strong>Liberado:</strong> todos os módulos foram visualizados. Inicie quando estiver pronto." : "<strong>Bloqueado:</strong> visualize 100% dos módulos para iniciar o quiz."}
+        </div>
+        <div id="quizStartArea">
+          <button ${!canQuiz || state.attempts >= TRAINING.maxAttempts || state.passed ? "disabled" : ""} onclick="startQuiz()">Iniciar nova tentativa</button>
+          ${state.passed ? '<button class="success" onclick="showPage(\'accept\')">Continuar para aceite eletrônico</button>' : ""}
+        </div>
+        <div id="quizRuntime" class="quiz-area"></div>
+      `;
+    }
+
+    function startQuiz(){
+      if(state.attempts >= TRAINING.maxAttempts){
+        openModal("Tentativas bloqueadas", "O limite de 3 tentativas foi atingido. Em ambiente real, novas tentativas dependeriam de autorização formal.");
+        return;
+      }
+      state.attempts += 1;
+      state.quizRemaining = TRAINING.quizMinutes*60;
+      state.quiz = shuffle(questionBank).slice(0,10).map(q => ({
+        q:q.q,
+        a:q.a,
+        options:shuffle([q.a,...q.o]),
+        selected:null
+      }));
+      save();
+      renderRunningQuiz();
+      startQuizTimer();
+      updateTopbar();
+    }
+
+    function renderRunningQuiz(){
+      const runtime = document.getElementById("quizRuntime");
+      runtime.innerHTML = `
+        <div class="quiz-toolbar">
+          <div class="timer" id="quizTimerLabel">15:00</div>
+          <span class="pill">Tentativa ${state.attempts} de ${TRAINING.maxAttempts}</span>
+        </div>
+        ${state.quiz.map((q,idx)=>`
+          <div class="quiz-card">
+            <div class="question-title">${idx+1}. ${q.q}</div>
+            ${q.options.map((op,oIdx)=>`
+              <label class="option">
+                <input type="radio" name="q${idx}" value="${escapeHtml(op)}" onchange="selectOption(${idx}, this.value)" />
+                ${op}
+              </label>`).join("")}
+          </div>
+        `).join("")}
+        <div class="footer-actions">
+          <button class="secondary" onclick="renderQuiz()">Cancelar tentativa</button>
+          <button onclick="finishQuiz(false)">Finalizar avaliação</button>
+        </div>
+      `;
+    }
+
+    function selectOption(idx, value){
+      if(state.quiz && state.quiz[idx]) {
+        state.quiz[idx].selected = value;
+        save();
+      }
+    }
+
+    function startQuizTimer(){
+      clearInterval(state.quizTimer);
+      state.quizTimer = setInterval(() => {
+        state.quizRemaining -= 1;
+        const label = document.getElementById("quizTimerLabel");
+        if(label) label.textContent = formatTime(state.quizRemaining);
+        if(state.quizRemaining <= 0){
+          finishQuiz(true);
+        }
+      }, 1000);
+    }
+
+    function finishQuiz(auto){
+      clearInterval(state.quizTimer);
+      if(!state.quiz) return;
+      const unanswered = state.quiz.filter(q=>!q.selected).length;
+      if(unanswered && !auto){
+        openModal("Perguntas pendentes", `Ainda existem ${unanswered} pergunta(s) sem resposta. Responda todas antes de finalizar.`);
+        return;
+      }
+      const correct = state.quiz.filter(q=>q.selected === q.a).length;
+      state.score = correct;
+      state.passed = correct >= TRAINING.passingScore;
+      state.current = "quiz";
+      save();
+      const runtime = document.getElementById("quizRuntime");
+      runtime.innerHTML = `
+        <div class="result-box">
+          <h4>${state.passed ? "Aprovado" : "Reprovado"}</h4>
+          <p>Sua nota foi <strong>${correct.toFixed(1)}</strong> de 10,0. Critério de aprovação: nota mínima 8,0.</p>
+          ${auto ? "<p>O tempo máximo foi encerrado automaticamente.</p>" : ""}
+          ${state.passed ? 
+            `<button class="success" onclick="showPage('accept')">Registrar aceite eletrônico</button>` :
+            state.attempts < TRAINING.maxAttempts ? `<button onclick="startQuiz()">Tentar novamente</button>` : `<button disabled>Limite de tentativas atingido</button>`
+          }
+        </div>
+        <div class="grid cols-2">
+          ${state.quiz.map((q,i)=>`
+            <div class="card">
+              <h4>${i+1}. ${q.selected === q.a ? "Correta" : "Incorreta"}</h4>
+              <p><strong>Pergunta:</strong> ${q.q}</p>
+              <p><strong>Sua resposta:</strong> ${q.selected || "Sem resposta"}</p>
+              <p><strong>Resposta correta:</strong> ${q.a}</p>
+            </div>
+          `).join("")}
+        </div>
+      `;
+      renderSidebar();
+      updateTopbar();
+    }
+
+    function renderAccept(){
+      const el = document.getElementById("page-accept");
+      const timeOk = getElapsedSeconds() >= REQUIRED_SECONDS;
+      el.innerHTML = `
+        <div class="page-head">
+          <div>
+            <div class="kicker">Aceite eletrônico</div>
+            <h3><span class="gradient-text">Declaração de ciência</span></h3>
+            <p class="intro">Antes da emissão do certificado, o colaborador deve confirmar eletronicamente sua participação, compreensão do conteúdo e ciência sobre tratamento de dados pessoais para fins de gestão do treinamento.</p>
+          </div>
+          <span class="tag">${state.passed && timeOk ? "Liberado" : "Bloqueado"}</span>
+        </div>
+        ${!state.passed ? `<div class="callout danger-callout"><strong>Bloqueado:</strong> o aceite eletrônico será liberado após aprovação na avaliação final.</div>` : !timeOk ? `<div class="callout danger-callout"><strong>Tempo mínimo pendente:</strong> o aceite eletrônico exige permanência mínima de 45 minutos. Para validar a prévia, use o botão "Simular 45 min" no menu lateral.</div>` : `
+          <div class="accept-box">
+            <p>Declaro que participei integralmente do treinamento, compreendi o conteúdo apresentado e me comprometo a cumprir os procedimentos, controles internos, requisitos de segurança da cadeia logística e diretrizes corporativas da Skymarine Logística Ltda. Declaro ainda estar ciente de que meus dados pessoais poderão ser tratados para fins de gestão, controle, registro e comprovação da realização deste treinamento, em conformidade com a Lei Geral de Proteção de Dados (LGPD) e as políticas internas da empresa.</p>
+            <div class="accept-row">
+              <input id="acceptCheck" type="checkbox" ${state.accepted ? "checked" : ""} />
+              <label for="acceptCheck" style="margin:0;text-transform:none;letter-spacing:0;font-size:1rem">Li, compreendi e concordo com a declaração acima.</label>
+            </div>
+          </div>
+          <div class="grid cols-3">
+            <div class="card"><h4>Nome</h4><p>${state.user?.name || "-"}</p></div>
+            <div class="card"><h4>Data e horário</h4><p>${new Date().toLocaleString("pt-BR")}</p></div>
+            <div class="card"><h4>Versão</h4><p>${TRAINING.version}</p></div>
+          </div>
+          <div class="footer-actions">
+            <button class="secondary" onclick="showPage('quiz')">Voltar ao quiz</button>
+            <button class="success" onclick="registerAccept()">Confirmar aceite e gerar certificado</button>
+          </div>
+        `}
+      `;
+    }
+
+    function registerAccept(){
+      if(getElapsedSeconds() < REQUIRED_SECONDS){
+        openModal("Tempo mínimo pendente", "O certificado só pode ser emitido após 45 minutos de permanência. Na prévia, use o botão 'Simular 45 min' no menu lateral.");
+        return;
+      }
+      const c = document.getElementById("acceptCheck");
+      if(!c || !c.checked){
+        openModal("Aceite obrigatório", "Marque a caixa de seleção para confirmar a declaração antes da emissão do certificado.");
+        return;
+      }
+      state.accepted = true;
+      if(!state.certCode) state.certCode = generateCertCode();
+      save();
+      renderCertificate();
+      renderDashboard();
+      renderSidebar();
+      updateTopbar();
+      showPage("certificate");
+    }
+
+    function renderCertificate(){
+      const el = document.getElementById("page-certificate");
+      const ready = state.passed && state.accepted;
+      const now = new Date();
+      const certCode = state.certCode || "Aguardando emissão";
+      el.innerHTML = `
+        ${!ready ? `
+          <div class="page-head">
+            <div><div class="kicker">Certificado</div><h3><span class="gradient-text">Ainda não liberado</span></h3><p class="intro">O certificado será exibido após aprovação no quiz e aceite eletrônico.</p></div>
+          </div>
+          <div class="callout danger-callout"><strong>Pendente:</strong> conclua as etapas anteriores para gerar o certificado.</div>
+        ` : `
+          <div class="certificate">
+            <div class="brandline">
+              <div class="logo"></div>
+              <div>
+                <div class="brand-title" style="color:#061526">SKYMARINE</div>
+                <div class="brand-sub" style="color:#31506a">Certificado de conclusão</div>
+              </div>
+            </div>
+            <h3>Certificado</h3>
+            <p>Certificamos que <strong>${state.user?.name || "Colaborador"}</strong>, cargo/área <strong>${state.user?.role || "-"}</strong>, participou do treinamento interno <strong>"${TRAINING.title}"</strong>, desenvolvido para fortalecer a segurança da cadeia logística, prevenção de incidentes, conformidade OEA, qualidade, gestão de riscos, compliance, segurança da informação e LGPD.</p>
+            <p>Carga horária oficial: <strong>1 hora</strong>. Nota obtida: <strong>${Number(state.score).toFixed(1)}</strong>. Versão do treinamento: <strong>${TRAINING.version}</strong>. Data de conclusão: <strong>${now.toLocaleDateString("pt-BR")}</strong>. Horário: <strong>${now.toLocaleTimeString("pt-BR")}</strong>.</p>
+            <div class="cert-grid">
+              <div>
+                <p><strong>Conteúdo abordado:</strong> objetivo do treinamento; cadeia logística/suprimentos; papel do comercial; incidente de segurança; itens que não podem ser transportados; processo de gestão de incidentes; fluxograma de comunicação; formulário de registro de incidentes.</p>
+                <p><strong>Código único do certificado:</strong> ${certCode}</p>
+                <div class="sign">Assinatura eletrônica autorizada · Skymarine Logística Ltda.</div>
+              </div>
+              <div>
+                <div class="qr">${qrBlocks(certCode)}</div>
+                <p style="font-size:.78rem;text-align:center;color:#31506a">QR Code demonstrativo para validação</p>
+              </div>
+            </div>
+          </div>
+          <div class="footer-actions no-print">
+            <button class="secondary" onclick="showPage('dashboard')">Ver dashboard</button>
+            <button onclick="window.print()">Salvar / imprimir certificado em PDF</button>
+          </div>
+        `}
+      `;
+    }
+
+    function renderDashboard(){
+      const pct = updateProgress();
+      const elapsed = getElapsedSeconds();
+      const concluded = state.passed && state.accepted ? 1 : 0;
+      const pending = concluded ? 0 : 1;
+      const rows = [
+        ["Colaborador", state.user?.name || "-", state.user?.email || "-", statusText(), state.score !== null ? state.score.toFixed(1) : "-", state.attempts, formatTime(elapsed)],
+        ["Treinamento", TRAINING.title, TRAINING.code, TRAINING.version, TRAINING.classification, "12 meses", "Retenção: 5 anos"]
+      ];
+      const el = document.getElementById("page-dashboard");
+      el.innerHTML = `
+        <div class="page-head">
+          <div>
+            <div class="kicker">Dashboard gerencial</div>
+            <h3><span class="gradient-text">Evidências, KPIs e rastreabilidade</span></h3>
+            <p class="intro">Painel demonstrativo com indicadores executivos, filtros conceituais e exportação simples. Em produção, os dados devem vir do banco da plataforma e respeitar perfis de acesso.</p>
+          </div>
+          <span class="tag">Demo local</span>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="kpi"><small>Cadastrados</small><strong>1</strong></div>
+          <div class="kpi"><small>Concluídos</small><strong>${concluded}</strong></div>
+          <div class="kpi"><small>Pendentes</small><strong>${pending}</strong></div>
+          <div class="kpi"><small>Progresso</small><strong>${pct}%</strong></div>
+        </div>
+
+        <div class="grid cols-2" style="margin-top:18px">
+          <div class="card">
+            <h4>Status do treinamento</h4>
+            <div class="bar-chart">
+              ${bar("Visualização dos módulos", Math.round(Object.keys(state.viewed).length/modules.length*100))}
+              ${bar("Tempo mínimo", Math.min(100, Math.round(elapsed/REQUIRED_SECONDS*100)))}
+              ${bar("Avaliação", state.passed ? 100 : 0)}
+              ${bar("Aceite eletrônico", state.accepted ? 100 : 0)}
+            </div>
+          </div>
+          <div class="card">
+            <h4>Controles simulados</h4>
+            <div class="grid cols-2">
+              <div class="callout"><strong>Logs</strong><br/>Acesso, navegador e tentativa registrados localmente.</div>
+              <div class="callout"><strong>Versão</strong><br/>Conclusão vinculada à revisão ${TRAINING.version}.</div>
+              <div class="callout"><strong>LGPD</strong><br/>Aceite eletrônico antes do certificado.</div>
+              <div class="callout"><strong>Auditoria</strong><br/>Exportação CSV e impressão em PDF.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <h4>Relatório demonstrativo</h4>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Tipo</th><th>Campo 1</th><th>Campo 2</th><th>Status/Versão</th><th>Nota/Classificação</th><th>Tentativas/Validade</th><th>Tempo/Retenção</th></tr></thead>
+              <tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${escapeHtml(String(c))}</td>`).join("")}</tr>`).join("")}</tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="footer-actions">
+          <button class="secondary" onclick="showPage('home')">Voltar ao início</button>
+          <div>
+            <button class="secondary" onclick="exportCSV()">Exportar CSV / Excel</button>
+            <button onclick="window.print()">Exportar visual em PDF</button>
+          </div>
+        </div>
+      `;
+      setTimeout(()=>document.querySelectorAll(".bar-fill").forEach(b=>b.style.width=b.dataset.width+"%"),50);
+    }
+
+    function bar(label, value){
+      return `<div class="bar-row"><span>${label}</span><div class="bar-bg"><div class="bar-fill" data-width="${value}"></div></div><strong>${value}%</strong></div>`;
+    }
+
+    function showPage(page){
+      finalizeModuleTime();
+      state.current = page;
+      document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+      const id = page === "module" ? "page-module" : "page-"+page;
+      const el = document.getElementById(id);
+      if(el) el.classList.add("active");
+      if(page === "module") renderModule();
+      if(page === "quiz") renderQuiz();
+      if(page === "accept") renderAccept();
+      if(page === "certificate") renderCertificate();
+      if(page === "dashboard") renderDashboard();
+      renderSidebar();
+      updateTopbar();
+      save();
+      window.scrollTo({top:0,behavior:"smooth"});
+    }
+
+    function updateTopbar(){
+      document.getElementById("statusPill").textContent = statusText();
+      document.getElementById("attemptsLabel").textContent = `${state.attempts}/${TRAINING.maxAttempts}`;
+      updateProgress();
+    }
+
+    function statusText(){
+      if(state.passed && state.accepted) return "Aprovado";
+      if(state.attempts >= TRAINING.maxAttempts && !state.passed) return "Reprovado";
+      if(Object.keys(state.viewed).length > 0) return "Em andamento";
+      return "Não iniciado";
+    }
+
+    function startElapsedTicker(){
+      setInterval(()=>{
+        const sec = getElapsedSeconds();
+        const label = document.getElementById("elapsedLabel");
+        if(label) label.textContent = formatTime(sec);
+      },1000);
+    }
+
+    function getElapsedSeconds(){
+      if(!state.startedAt) return 0;
+      return Math.floor((Date.now() - state.startedAt)/1000) + (state.elapsedOffset || 0);
+    }
+
+    function simulateTime(){
+      state.elapsedOffset = Math.max(state.elapsedOffset || 0, REQUIRED_SECONDS);
+      save();
+      updateTopbar();
+      openModal("Tempo mínimo simulado", "O tempo mínimo de 45 minutos foi simulado para facilitar a validação da prévia. Em produção, essa ação não deve existir para colaboradores.");
+    }
+
+    function resetTraining(){
+      localStorage.removeItem("maluTrainingState");
+      location.reload();
+    }
+
+    function exportCSV(){
+      const lines = [
+        ["Nome","Email","Cargo/Área","Treinamento","Código","Versão","Status","Nota","Tentativas","Tempo","Aceite","Certificado"],
+        [state.user?.name || "", state.user?.email || "", state.user?.role || "", TRAINING.title, TRAINING.code, TRAINING.version, statusText(), state.score ?? "", state.attempts, formatTime(getElapsedSeconds()), state.accepted ? "Aceito" : "Pendente", state.certCode || ""]
+      ];
+      const csv = lines.map(row => row.map(v => `"${String(v).replaceAll('"','""')}"`).join(";")).join("\n");
+      const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "dashboard_treinamento_malu_skymarine.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function generateCertCode(){
+      return "SKY-" + new Date().getFullYear() + "-" + Math.random().toString(36).slice(2,8).toUpperCase();
+    }
+
+    function qrBlocks(seed){
+      let hash = 0;
+      for(let i=0;i<seed.length;i++) hash = ((hash<<5)-hash) + seed.charCodeAt(i);
+      let html = "";
+      for(let i=0;i<49;i++){
+        const fixed = [0,1,2,7,14,8,15,16,5,6,12,13,42,43,44,35,28,36].includes(i);
+        const on = fixed || Math.abs(Math.sin(hash+i)*1000)%1 > .52;
+        html += `<span style="opacity:${on?1:0}"></span>`;
+      }
+      return html;
+    }
+
+    function shuffle(arr){
+      const a = [...arr];
+      for(let i=a.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [a[i],a[j]]=[a[j],a[i]];
+      }
+      return a;
+    }
+
+    function formatTime(sec){
+      sec = Math.max(0, sec || 0);
+      const m = Math.floor(sec/60);
+      const s = sec%60;
+      return String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+    }
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    }
+
+    function openModal(title,text){
+      document.getElementById("modalTitle").textContent = title;
+      document.getElementById("modalText").innerHTML = text;
+      document.getElementById("modal").classList.add("open");
+    }
+
+    function closeModal(e){
+      if(e && e.target.id !== "modal") return;
+      document.getElementById("modal").classList.remove("open");
+    }
+
+    function toggleSidebar(force){
+      const sb = document.getElementById("sidebar");
+      if(force === false) sb.classList.remove("open");
+      else sb.classList.toggle("open");
+    }
+
+    window.addEventListener("beforeunload", finalizeModuleTime);
+    load();
+  </script>
+</body>
+</html>
